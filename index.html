@@ -32,6 +32,7 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 2;
+      display: none; /* Initially hidden */
     }
     #play-video1 { bottom: 60px; left: 20%; }
     #play-video2 { bottom: 60px; right: 20%; }
@@ -82,7 +83,7 @@
     <a-image id="image2-back" src="assets/image2.jpeg" position="1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
 
     <!-- Camera with raycaster -->
-    <a-camera id="camera" position="0 1.6 0" look-controls></a-camera>
+    <a-camera id="camera" position="0 1.6 0" look-controls raycaster="objects: .play-button"></a-camera>
   </a-scene>
 
   <script>
@@ -98,11 +99,38 @@
       videoEl.muted = false; // Enable sound
     }
 
+    // Show/hide buttons based on raycaster intersection
+    const buttons = [
+      { videoId: '#vid1', button: document.getElementById('play-video1') },
+      { videoId: '#vid2', button: document.getElementById('play-video2') },
+      { videoId: '#vid3', button: document.getElementById('play-video3') },
+      { videoId: '#vid4', button: document.getElementById('play-video4') },
+    ];
+
+    // Function to check raycaster intersections
+    function checkIntersections() {
+      const intersections = document.querySelector('#camera').components.raycaster.intersections;
+      buttons.forEach(({ videoId, button }) => {
+        if (intersections.length > 0) {
+          const isVisible = intersections.some(intersection => intersection.object.id === videoId.replace('#', ''));
+          button.style.display = isVisible ? 'block' : 'none';
+        } else {
+          button.style.display = 'none';
+        }
+      });
+    }
+
     // Event listeners for each play button
     document.getElementById('play-video1').addEventListener('click', () => playVideo('#vid1'));
     document.getElementById('play-video2').addEventListener('click', () => playVideo('#vid2'));
     document.getElementById('play-video3').addEventListener('click', () => playVideo('#vid3'));
     document.getElementById('play-video4').addEventListener('click', () => playVideo('#vid4'));
+
+    // Update button visibility on every frame
+    document.querySelector('a-scene').addEventListener('enter-vr', () => {
+      const scene = document.querySelector('a-scene');
+      scene.addEventListener('tick', checkIntersections);
+    });
   </script>
 </body>
 </html>
