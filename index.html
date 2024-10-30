@@ -24,12 +24,29 @@
       padding: 10px;
       z-index: 1;
     }
+    #play-button {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: #ff5733;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 2;
+    }
   </style>
 </head>
 <body>
   <div id="ar-info">
     Mueve tu telefono alrededor!
   </div>
+
+  <!-- Start Videos Button -->
+  <button id="play-button">Start Videos</button>
 
   <!-- A-Frame AR Scene -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: true;">
@@ -38,54 +55,45 @@
     <a-video src="assets/video1.mp4" 
       position="7 0 -3" 
       scale="3 3 3" 
-      rotation="0 -10 0"
-      autoplay 
+      rotation="0 10 0"
       muted 
       playsinline 
-      loop 
-      look-at="[camera]">
+      loop>
     </a-video>
 
     <a-video src="assets/video2.mp4" 
       position="3.54 0 3.54" 
       scale="3 3 3" 
-      rotation="0 0 0"
-      autoplay 
+      rotation="0 -45 0"
       muted 
       playsinline 
-      loop 
-      look-at="[camera]">
+      loop>
     </a-video>
 
     <a-video src="assets/video3.mp4" 
       position="0 0 5" 
       scale="3 3 3" 
       rotation="0 0 0"
-      autoplay 
       muted 
       playsinline 
-      loop 
-      look-at="[camera]">
+      loop>
     </a-video>
 
-    <!-- Images positioned around the scene with look-at attribute -->
+    <!-- Images positioned around the scene -->
     <a-image src="assets/image1.jpeg" 
       position="-3.54 0 3.54" 
       scale="3 3 3" 
-      rotation="0 0 0"
-      look-at="[camera]"></a-image>
+      rotation="0 -135 0"></a-image>
 
-    <a-image src="assets/image1.jpeg" 
+    <a-image src="assets/image2.jpeg" 
       position="-3 0 -3" 
       scale="3 3 3" 
-      rotation="0 0 0"
-      look-at="[camera]"></a-image>
+      rotation="0 135 0"></a-image>
 
-    <a-image src="assets/image1.jpeg" 
+    <a-image src="assets/virgen.jpg" 
       position="4 0 -4" 
       scale="3 3 3" 
-      rotation="0 0 0"
-      look-at="[camera]"></a-image>
+      rotation="0 -45 0"></a-image>
 
   </a-scene>
 
@@ -95,9 +103,9 @@
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
-    // Attempt to trigger play on videos for mobile devices
-    document.querySelectorAll('a-video').forEach(videoEl => {
-      videoEl.addEventListener('loadeddata', () => {
+    // Play videos on user interaction
+    document.getElementById('play-button').addEventListener('click', () => {
+      document.querySelectorAll('a-video').forEach(videoEl => {
         const video = videoEl.components.material.material.map.image;
         if (video && typeof video.play === "function") {
           video.play().catch(error => {
@@ -105,14 +113,9 @@
           });
         }
       });
-
-      // Additional autoplay handling for Safari on iOS
-      videoEl.addEventListener('click', () => {
-        const video = videoEl.components.material.material.map.image;
-        if (video && typeof video.play === "function") {
-          video.play();
-        }
-      });
+      
+      // Hide the play button after starting videos
+      document.getElementById('play-button').style.display = 'none';
     });
   </script>
 
