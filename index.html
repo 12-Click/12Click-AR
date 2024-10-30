@@ -32,8 +32,11 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 2;
-      display: none; /* Hidden initially */
     }
+    #play-video1 { bottom: 60px; left: 20%; }
+    #play-video2 { bottom: 60px; right: 20%; }
+    #play-video3 { top: 60px; left: 20%; }
+    #play-video4 { top: 60px; right: 20%; }
   </style>
 </head>
 <body>
@@ -41,7 +44,7 @@
     Mueve tu teléfono alrededor!
   </div>
 
-  <!-- Buttons will be shown based on which video is in view -->
+  <!-- Buttons will be displayed beneath each video -->
   <button id="play-video1" class="play-button">Play Video 1</button>
   <button id="play-video2" class="play-button">Play Video 2</button>
   <button id="play-video3" class="play-button">Play Video 3</button>
@@ -79,8 +82,7 @@
     <a-image id="image2-back" src="assets/image2.jpeg" position="1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
 
     <!-- Camera with raycaster -->
-    <a-camera id="camera" position="0 1.6 0" look-controls raycaster="objects: a-video; interval: 500">
-    </a-camera>
+    <a-camera id="camera" position="0 1.6 0" look-controls></a-camera>
   </a-scene>
 
   <script>
@@ -95,28 +97,6 @@
       videoEl.play();
       videoEl.muted = false; // Enable sound
     }
-
-    // Raycaster intersection event listener
-    const camera = document.querySelector('#camera');
-    camera.addEventListener('raycaster-intersection', function (evt) {
-      const intersectedElement = evt.detail.intersections[0].object.el;
-      
-      // Show corresponding play button based on intersected video
-      if (intersectedElement.id === 'video1') {
-        document.getElementById('play-video1').style.display = 'block';
-      } else if (intersectedElement.id === 'video2') {
-        document.getElementById('play-video2').style.display = 'block';
-      } else if (intersectedElement.id === 'video3') {
-        document.getElementById('play-video3').style.display = 'block';
-      } else if (intersectedElement.id === 'video4') {
-        document.getElementById('play-video4').style.display = 'block';
-      }
-    });
-
-    // Hide buttons when raycaster no longer intersects a video
-    camera.addEventListener('raycaster-intersection-cleared', function (evt) {
-      document.querySelectorAll('.play-button').forEach(button => button.style.display = 'none');
-    });
 
     // Event listeners for each play button
     document.getElementById('play-video1').addEventListener('click', () => playVideo('#vid1'));
