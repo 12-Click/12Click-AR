@@ -3,75 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mobile AR Experience</title>
+  <title>12Click</title>
+  <!-- Include A-Frame and AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/aframe-ar@1.8.0/dist/aframe-ar.min.js"></script>
+  <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/1.7.2/aframe/build/aframe-ar.min.js"></script>
+  <script src="https://unpkg.com/aframe-drag-component/dist/aframe-drag-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-rotate-component/dist/aframe-rotate-component.min.js"></script>
+
+  <!-- Favicon-->
+  <link rel="shortcut icon" href="assets/Logo.png">
+  
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #ar-info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      z-index: 1;
+    }
+    #play-button {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background-color: #ff5733;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 2;
+    }
+  </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; facingMode: environment;" allow="camera; gyroscope; accelerometer">
-    <!-- Camera -->
-    <a-camera-static look-controls></a-camera-static>
+<body>
+  <div id="ar-info">
+    Mueve tu telefono alrededor!
+  </div>
 
-    <!-- Images around the user -->
-    <a-image src="assets/image1.jpeg" position="-2 1 -3" scale="1.5 1.5 1.5"></a-image>
-    <a-image src="assets/image1.jpeg" position="2 1 -3" scale="1.5 1.5 1.5"></a-image>
-    <a-image src="assets/image1.jpeg" position="0 1 -5" scale="1.5 1.5 1.5"></a-image>
+  <!-- Start Videos Button -->
+  <button id="play-button">Start Videos</button>
 
-    <!-- Video elements with play buttons -->
-    <a-entity position="-3 1 -4">
-      <a-video id="video1" src="assets/video1.mp4" width="1.5" height="1" position="0 0 0"></a-video>
-      <a-box id="button1" color="red" position="0 -0.75 0" scale="0.5 0.2 0.2" onclick="playPauseVideo('video1')"></a-box>
-    </a-entity>
+  <!-- A-Frame AR Scene -->
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: true;">
+    
+    <!-- Videos positioned around the scene -->
+    <a-video src="assets/video1.mp4" 
+      position="7 0 -3" 
+      scale="3 3 3" 
+      rotation="0 10 0"
+      muted 
+      playsinline 
+      loop>
+    </a-video>
 
-    <a-entity position="3 1 -4">
-      <a-video id="video2" src="assets/video2.mp4" width="1.5" height="1" position="0 0 0"></a-video>
-      <a-box id="button2" color="red" position="0 -0.75 0" scale="0.5 0.2 0.2" onclick="playPauseVideo('video2')"></a-box>
-    </a-entity>
+    <a-video src="assets/video2.mp4" 
+      position="3.54 0 3.54" 
+      scale="3 3 3" 
+      rotation="0 -45 0"
+      muted 
+      playsinline 
+      loop>
+    </a-video>
 
-    <a-entity position="0 1 -6">
-      <a-video id="video3" src="assets/video3.mp4" width="1.5" height="1" position="0 0 0"></a-video>
-      <a-box id="button3" color="red" position="0 -0.75 0" scale="0.5 0.2 0.2" onclick="playPauseVideo('video3')"></a-box>
-    </a-entity>
+    <a-video src="assets/video3.mp4" 
+      position="0 0 5" 
+      scale="3 3 3" 
+      rotation="0 0 0"
+      muted 
+      playsinline 
+      loop>
+    </a-video>
 
-    <!-- Video sources (hidden video tags for loading) -->
-    <video id="videoSource1" src="assets/video1.mp4" loop="true" preload="auto" crossorigin="anonymous"></video>
-    <video id="videoSource2" src="assets/video2.mp4" loop="true" preload="auto" crossorigin="anonymous"></video>
-    <video id="videoSource3" src="assets/video3.mp4" loop="true" preload="auto" crossorigin="anonymous"></video>
+    <!-- Images positioned around the scene -->
+    <a-image src="assets/image1.jpeg" 
+      position="-3.54 0 3.54" 
+      scale="3 3 3" 
+      rotation="0 -135 0"></a-image>
+
+    <a-image src="assets/image2.jpeg" 
+      position="-3 0 -3" 
+      scale="3 3 3" 
+      rotation="0 135 0"></a-image>
+
+    <a-image src="assets/virgen.jpg" 
+      position="4 0 -4" 
+      scale="3 3 3" 
+      rotation="0 -45 0"></a-image>
+
   </a-scene>
 
   <script>
-    // Function to toggle play/pause for video elements
-    function playPauseVideo(videoId) {
-      const videoEl = document.querySelector(#${videoId});
-      const video = videoEl.components.material.material.map.image;
-      if (video.paused) {
-        video.play();
-      } else {
-        video.pause();
-      }
-    }
+    // Remove AR info after 3 seconds
+    setTimeout(() => {
+      document.getElementById('ar-info').style.display = 'none';
+    }, 3000);
 
-    // Component to automatically play/pause based on view
-    AFRAME.registerComponent('play-on-view', {
-      init: function () {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            const video = entry.target.components.material.material.map.image;
-            if (entry.isIntersecting) {
-              video.play();
-            } else {
-              video.pause();
-            }
+    // Play videos on user interaction
+    document.getElementById('play-button').addEventListener('click', () => {
+      document.querySelectorAll('a-video').forEach(videoEl => {
+        const video = videoEl.components.material.material.map.image;
+        if (video && typeof video.play === "function") {
+          video.play().catch(error => {
+            console.log('Autoplay prevented:', error);
           });
-        });
-        observer.observe(this.el);
-      }
-    });
-
-    // Attach play-on-view to each video element
-    document.querySelectorAll('a-video').forEach(videoEl => {
-      videoEl.setAttribute('play-on-view', '');
+        }
+      });
+      
+      // Hide the play button after starting videos
+      document.getElementById('play-button').style.display = 'none';
     });
   </script>
+
 </body>
 </html>
