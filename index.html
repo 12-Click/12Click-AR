@@ -23,32 +23,20 @@
       z-index: 1;
     }
     .play-button {
-      position: fixed;
-      padding: 10px 20px;
       background-color: #ff5733;
       color: white;
-      font-size: 16px;
+      font-size: 14px;
+      padding: 8px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      z-index: 2;
     }
-    #play-video1 { bottom: 60px; left: 20%; }
-    #play-video2 { bottom: 60px; right: 20%; }
-    #play-video3 { top: 60px; left: 20%; }
-    #play-video4 { top: 60px; right: 20%; }
   </style>
 </head>
 <body>
   <div id="ar-info">
     Mueve tu teléfono alrededor!
   </div>
-
-  <!-- Buttons will be displayed beneath each video -->
-  <button id="play-video1" class="play-button">Play Video 1</button>
-  <button id="play-video2" class="play-button">Play Video 2</button>
-  <button id="play-video3" class="play-button">Play Video 3</button>
-  <button id="play-video4" class="play-button">Play Video 4</button>
 
   <!-- A-Frame AR Scene without loading bar or debug UI -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true">
@@ -62,26 +50,46 @@
     </a-assets>
 
     <!-- Front Position -->
-    <a-image id="image1-front" src="assets/image1.jpeg" position="-1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
-    <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0" crossorigin="anonymous"></a-video>
-    <a-image id="image2-front" src="assets/image2.jpeg" position="1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
+    <a-image id="image1-front" src="assets/image1.jpeg" position="-1.8 1.2 -3" scale="1.5 1.5 1.5"></a-image>
+    <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.5 1.5 1.5" crossorigin="anonymous"></a-video>
+    <a-entity id="button1" position="0 0.6 -3">
+      <a-entity geometry="primitive: plane; height: 0.2; width: 0.8" 
+                material="color: #ff5733; opacity: 0.8" 
+                text="value: Play Video 1; align: center; color: white; width: 2" 
+                class="play-button"></a-entity>
+    </a-entity>
 
     <!-- Right Position -->
     <a-image id="image1-right" src="assets/image1.jpeg" position="3 1.2 -1.8" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
     <a-video id="video2" src="#vid2" position="3 1 0" scale="1.5 1.5 1.5" rotation="0 -90 0" crossorigin="anonymous"></a-video>
-    <a-image id="image2-right" src="assets/image2.jpeg" position="3 1.2 1.8" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
+    <a-entity id="button2" position="3 0.6 0" rotation="0 -90 0">
+      <a-entity geometry="primitive: plane; height: 0.2; width: 0.8" 
+                material="color: #ff5733; opacity: 0.8" 
+                text="value: Play Video 2; align: center; color: white; width: 2" 
+                class="play-button"></a-entity>
+    </a-entity>
 
     <!-- Left Position -->
     <a-image id="image1-left" src="assets/image1.jpeg" position="-3 1.2 -1.8" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
     <a-video id="video3" src="#vid3" position="-3 1 0" scale="1.5 1.5 1.5" rotation="0 90 0" crossorigin="anonymous"></a-video>
-    <a-image id="image2-left" src="assets/image2.jpeg" position="-3 1.2 1.8" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
+    <a-entity id="button3" position="-3 0.6 0" rotation="0 90 0">
+      <a-entity geometry="primitive: plane; height: 0.2; width: 0.8" 
+                material="color: #ff5733; opacity: 0.8" 
+                text="value: Play Video 3; align: center; color: white; width: 2" 
+                class="play-button"></a-entity>
+    </a-entity>
 
     <!-- Back Position -->
     <a-image id="image1-back" src="assets/image1.jpeg" position="-1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
     <a-video id="video4" src="#vid4" position="0 1 3" scale="1.5 1.5 1.5" rotation="0 180 0" crossorigin="anonymous"></a-video>
-    <a-image id="image2-back" src="assets/image2.jpeg" position="1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
+    <a-entity id="button4" position="0 0.6 3" rotation="0 180 0">
+      <a-entity geometry="primitive: plane; height: 0.2; width: 0.8" 
+                material="color: #ff5733; opacity: 0.8" 
+                text="value: Play Video 4; align: center; color: white; width: 2" 
+                class="play-button"></a-entity>
+    </a-entity>
 
-    <!-- Camera with raycaster -->
+    <!-- Camera -->
     <a-camera id="camera" position="0 1.6 0" look-controls></a-camera>
   </a-scene>
 
@@ -98,11 +106,11 @@
       videoEl.muted = false; // Enable sound
     }
 
-    // Event listeners for each play button
-    document.getElementById('play-video1').addEventListener('click', () => playVideo('#vid1'));
-    document.getElementById('play-video2').addEventListener('click', () => playVideo('#vid2'));
-    document.getElementById('play-video3').addEventListener('click', () => playVideo('#vid3'));
-    document.getElementById('play-video4').addEventListener('click', () => playVideo('#vid4'));
+    // Event listeners for each button entity
+    document.querySelector('#button1').addEventListener('click', () => playVideo('#vid1'));
+    document.querySelector('#button2').addEventListener('click', () => playVideo('#vid2'));
+    document.querySelector('#button3').addEventListener('click', () => playVideo('#vid3'));
+    document.querySelector('#button4').addEventListener('click', () => playVideo('#vid4'));
   </script>
 </body>
 </html>
