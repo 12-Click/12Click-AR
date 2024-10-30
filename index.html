@@ -48,7 +48,7 @@
   <button id="play-video4" class="play-button">Play Video 4</button>
 
   <!-- A-Frame AR Scene without loading bar or debug UI -->
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true">
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true">
 
     <!-- Preload assets to ensure they load correctly -->
     <a-assets>
@@ -56,27 +56,23 @@
       <video id="vid2" src="assets/video2.mp4" playsinline muted crossorigin="anonymous"></video>
       <video id="vid3" src="assets/video3.mp4" playsinline muted crossorigin="anonymous"></video>
       <video id="vid4" src="assets/video1.mp4" playsinline muted crossorigin="anonymous"></video>
-      <img id="thumb1" src="assets/thumbnail1.jpg">
-      <img id="thumb2" src="assets/thumbnail2.jpg">
-      <img id="thumb3" src="assets/thumbnail3.jpg">
-      <img id="thumb4" src="assets/thumbnail4.jpg">
     </a-assets>
 
     <!-- Front Position -->
-    <a-image id="image1-front" src="assets/image1.jpeg" position="-1.5 1.2 -3.5" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
-    <a-video id="video1" src="#vid1" position="1.5 1.2 -3.5" scale="1.5 1.5 1.5" rotation="0 0 0" toggle-button="#play-video1" crossorigin="anonymous"></a-video>
+    <a-image id="image1-front" src="assets/image1.jpeg" position="-2 1.5 -4" scale="2 2 2" rotation="0 0 0"></a-image>
+    <a-video id="video1" src="#vid1" position="2 1.5 -4" scale="2 2 2" rotation="0 0 0" crossorigin="anonymous"></a-video>
 
     <!-- Right Position -->
-    <a-image id="image1-right" src="assets/image1.jpeg" position="3.5 1.2 0" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
-    <a-video id="video2" src="#vid2" position="3.5 1.2 1.5" scale="1.5 1.5 1.5" rotation="0 -90 0" toggle-button="#play-video2" crossorigin="anonymous"></a-video>
+    <a-image id="image1-right" src="assets/image1.jpeg" position="4 1.5 0" scale="2 2 2" rotation="0 -90 0"></a-image>
+    <a-video id="video2" src="#vid2" position="4 1.5 2" scale="2 2 2" rotation="0 -90 0" crossorigin="anonymous"></a-video>
 
     <!-- Left Position -->
-    <a-image id="image1-left" src="assets/image1.jpeg" position="-3.5 1.2 0" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
-    <a-video id="video3" src="#vid3" position="-3.5 1.2 -1.5" scale="1.5 1.5 1.5" rotation="0 90 0" toggle-button="#play-video3" crossorigin="anonymous"></a-video>
+    <a-image id="image1-left" src="assets/image1.jpeg" position="-4 1.5 0" scale="2 2 2" rotation="0 90 0"></a-image>
+    <a-video id="video3" src="#vid3" position="-4 1.5 -2" scale="2 2 2" rotation="0 90 0" crossorigin="anonymous"></a-video>
 
     <!-- Back Position -->
-    <a-image id="image1-back" src="assets/image1.jpeg" position="-1.5 1.2 3.5" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
-    <a-video id="video4" src="#vid4" position="1.5 1.2 3.5" scale="1.5 1.5 1.5" rotation="0 180 0" toggle-button="#play-video4" crossorigin="anonymous"></a-video>
+    <a-image id="image1-back" src="assets/image1.jpeg" position="-2 1.5 4" scale="2 2 2" rotation="0 180 0"></a-image>
+    <a-video id="video4" src="#vid4" position="2 1.5 4" scale="2 2 2" rotation="0 180 0" crossorigin="anonymous"></a-video>
 
   </a-scene>
 
@@ -90,7 +86,6 @@
     function showVideo(videoId) {
       const videoEl = document.getElementById(videoId);
       videoEl.components.material.material.map.image.play(); // Start the video
-      videoEl.removeAttribute('material'); // Remove the thumbnail material once the video plays
     }
 
     // Event listeners for each play button
@@ -104,29 +99,30 @@
       const camera = document.querySelector('[camera]');
       const cameraPosition = camera.object3D.position;
 
-      // Proximity check function for each video and button
-      const isFacing = (videoId, buttonId) => {
+      // Check if the camera is close to and facing each video
+      const checkVisibility = (videoId, buttonId) => {
         const videoEl = document.getElementById(videoId).object3D;
         const button = document.getElementById(buttonId);
         const distance = cameraPosition.distanceTo(videoEl.position);
 
-        // Show button if camera is close enough, otherwise hide
+        // Show button if close enough, hide if not
         if (distance < 2.5) {
           button.style.display = 'block';
-          button.style.left = `${window.innerWidth / 2 - button.offsetWidth / 2}px`; // Centered below video
+          button.style.left = `${window.innerWidth / 2 - button.offsetWidth / 2}px`; // Center button
         } else {
           button.style.display = 'none';
         }
       };
 
-      isFacing('video1', 'play-video1');
-      isFacing('video2', 'play-video2');
-      isFacing('video3', 'play-video3');
-      isFacing('video4', 'play-video4');
+      checkVisibility('video1', 'play-video1');
+      checkVisibility('video2', 'play-video2');
+      checkVisibility('video3', 'play-video3');
+      checkVisibility('video4', 'play-video4');
     }
 
-    // Continuously check button visibility
+    // Continuously check button visibility every 500ms
     setInterval(toggleButtonVisibility, 500);
   </script>
 </body>
 </html>
+
