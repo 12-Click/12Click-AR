@@ -4,11 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>12Click</title>
-  <!-- Latest A-Frame and AR.js versions -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.3.2/aframe/build/aframe-ar-nft.min.js"></script>
   
-  <!-- Favicon -->
   <link rel="shortcut icon" href="assets/Logo.png">
   
   <style>
@@ -32,7 +30,7 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 2;
-      display: none; /* Initially hidden */
+      display: none;
     }
     #play-video1 { bottom: 60px; left: 20%; }
     #play-video2 { bottom: 60px; right: 20%; }
@@ -45,16 +43,12 @@
     Mueve tu teléfono alrededor!
   </div>
 
-  <!-- Buttons will be displayed beneath each video -->
   <button id="play-video1" class="play-button">Play Video 1</button>
   <button id="play-video2" class="play-button">Play Video 2</button>
   <button id="play-video3" class="play-button">Play Video 3</button>
   <button id="play-video4" class="play-button">Play Video 4</button>
 
-  <!-- A-Frame AR Scene without loading bar or debug UI -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true">
-
-    <!-- Preload assets to ensure they load correctly -->
     <a-assets>
       <video id="vid1" src="assets/video1.mp4" playsinline crossorigin="anonymous"></video>
       <video id="vid2" src="assets/video2.mp4" playsinline crossorigin="anonymous"></video>
@@ -62,44 +56,36 @@
       <video id="vid4" src="assets/video1.mp4" playsinline crossorigin="anonymous"></video>
     </a-assets>
 
-    <!-- Front Position -->
     <a-image id="image1-front" src="assets/image1.jpeg" position="-1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
     <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0" crossorigin="anonymous"></a-video>
     <a-image id="image2-front" src="assets/image2.jpeg" position="1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
 
-    <!-- Right Position -->
     <a-image id="image1-right" src="assets/image1.jpeg" position="3 1.2 -1.8" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
-    <a-video id="video2" src="#vid2" position="3 1 0" scale="1.5 1.5 1.5" rotation="0 -90 0" crossorigin="anonymous"></a-video>
+    <a-video id="video2" src="#vid2" position="3 1 -0" scale="1.5 1.5 1.5" rotation="0 -90 0" crossorigin="anonymous"></a-video>
     <a-image id="image2-right" src="assets/image2.jpeg" position="3 1.2 1.8" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
 
-    <!-- Left Position -->
     <a-image id="image1-left" src="assets/image1.jpeg" position="-3 1.2 -1.8" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
     <a-video id="video3" src="#vid3" position="-3 1 0" scale="1.5 1.5 1.5" rotation="0 90 0" crossorigin="anonymous"></a-video>
     <a-image id="image2-left" src="assets/image2.jpeg" position="-3 1.2 1.8" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
 
-    <!-- Back Position -->
     <a-image id="image1-back" src="assets/image1.jpeg" position="-1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
     <a-video id="video4" src="#vid4" position="0 1 3" scale="1.5 1.5 1.5" rotation="0 180 0" crossorigin="anonymous"></a-video>
     <a-image id="image2-back" src="assets/image2.jpeg" position="1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
 
-    <!-- Camera with raycaster -->
-    <a-camera id="camera" position="0 1.6 0" look-controls raycaster="objects: .play-button"></a-camera>
+    <a-camera id="camera" position="0 1.6 0" look-controls="enabled: true"></a-camera>
   </a-scene>
 
   <script>
-    // Remove AR info after 3 seconds
     setTimeout(() => {
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
-    // Play video function
     function playVideo(videoId) {
       const videoEl = document.querySelector(videoId);
       videoEl.play();
-      videoEl.muted = false; // Enable sound
+      videoEl.muted = false;
     }
 
-    // Show/hide buttons based on raycaster intersection
     const buttons = [
       { videoId: '#vid1', button: document.getElementById('play-video1') },
       { videoId: '#vid2', button: document.getElementById('play-video2') },
@@ -107,29 +93,30 @@
       { videoId: '#vid4', button: document.getElementById('play-video4') },
     ];
 
-    // Function to check raycaster intersections
-    function checkIntersections() {
-      const intersections = document.querySelector('#camera').components.raycaster.intersections;
+    document.querySelectorAll('.play-button').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        const videoId = event.target.id.replace('play-', '#');
+        playVideo(videoId);
+      });
+    });
+
+    function updateButtonVisibility() {
+      const camera = document.getElementById('camera');
+      const intersections = camera.components.raycaster.intersections;
+
       buttons.forEach(({ videoId, button }) => {
-        if (intersections.length > 0) {
-          const isVisible = intersections.some(intersection => intersection.object.id === videoId.replace('#', ''));
-          button.style.display = isVisible ? 'block' : 'none';
+        if (intersections.some(intersection => intersection.object.id === videoId.replace('#', ''))) {
+          button.style.display = 'block';
         } else {
           button.style.display = 'none';
         }
       });
     }
 
-    // Event listeners for each play button
-    document.getElementById('play-video1').addEventListener('click', () => playVideo('#vid1'));
-    document.getElementById('play-video2').addEventListener('click', () => playVideo('#vid2'));
-    document.getElementById('play-video3').addEventListener('click', () => playVideo('#vid3'));
-    document.getElementById('play-video4').addEventListener('click', () => playVideo('#vid4'));
-
-    // Update button visibility on every frame
-    document.querySelector('a-scene').addEventListener('enter-vr', () => {
-      const scene = document.querySelector('a-scene');
-      scene.addEventListener('tick', checkIntersections);
+    document.querySelector('a-scene').addEventListener('renderstart', () => {
+      const camera = document.getElementById('camera');
+      camera.addEventListener('raycaster-intersection', updateButtonVisibility);
+      camera.addEventListener('raycaster-intersection-cleared', updateButtonVisibility);
     });
   </script>
 </body>
