@@ -21,7 +21,7 @@
       z-index: 1;
     }
     .play-button {
-      position: fixed;
+      position: absolute;
       padding: 10px 20px;
       background-color: #ff5733;
       color: white;
@@ -30,13 +30,8 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 2;
+      display: none; /* Initially hidden */
     }
-
-    /* Place buttons based on the estimated screen position of each video */
-    #play-video1 { bottom: 15%; left: 45%; transform: translate(-50%, 50%); }
-    #play-video2 { bottom: 50%; right: 15%; transform: translate(50%, 50%); }
-    #play-video3 { bottom: 50%; left: 15%; transform: translate(-50%, 50%); }
-    #play-video4 { top: 15%; left: 45%; transform: translate(-50%, -50%); }
   </style>
 </head>
 <body>
@@ -95,6 +90,37 @@
     document.getElementById('play-video2').addEventListener('click', () => playVideo('#vid2'));
     document.getElementById('play-video3').addEventListener('click', () => playVideo('#vid3'));
     document.getElementById('play-video4').addEventListener('click', () => playVideo('#vid4'));
+
+    // Function to map 3D position to 2D screen coordinates
+    function updateButtonPosition(videoEl, buttonEl) {
+      const position = videoEl.object3D.getWorldPosition(new THREE.Vector3());
+      const camera = document.querySelector('[camera]').object3D;
+      const widthHalf = window.innerWidth / 2;
+      const heightHalf = window.innerHeight / 2;
+
+      position.project(camera);
+
+      const x = (position.x * widthHalf) + widthHalf;
+      const y = -(position.y * heightHalf) + heightHalf;
+
+      // Position button 50px below the video element
+      buttonEl.style.left = `${x}px`;
+      buttonEl.style.top = `${y + 50}px`;
+      buttonEl.style.display = 'block';
+    }
+
+    // Continuously update button positions
+    AFRAME.registerComponent('update-buttons', {
+      tick: function () {
+        updateButtonPosition(document.getElementById('video1'), document.getElementById('play-video1'));
+        updateButtonPosition(document.getElementById('video2'), document.getElementById('play-video2'));
+        updateButtonPosition(document.getElementById('video3'), document.getElementById('play-video3'));
+        updateButtonPosition(document.getElementById('video4'), document.getElementById('play-video4'));
+      }
+    });
+
+    // Add the component to the camera so it updates every frame
+    document.getElementById('camera').setAttribute('update-buttons', '');
   </script>
 </body>
 </html>
