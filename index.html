@@ -34,7 +34,7 @@
   <!-- A-Frame AR Scene -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: true;">
     
-    <!-- Replace 3 images with videos -->
+    <!-- Videos positioned around the scene -->
     <a-video src="assets/video1.mp4" 
       position="7 0 -3" 
       scale="3 3 3" 
@@ -68,20 +68,20 @@
       look-at="[camera]">
     </a-video>
 
-    <!-- Remaining AR images positioned around a sphere with look-at -->
+    <!-- Images positioned around the scene with look-at attribute -->
     <a-image src="assets/image1.jpeg" 
       position="-3.54 0 3.54" 
       scale="3 3 3" 
       rotation="0 0 0"
       look-at="[camera]"></a-image>
 
-    <a-image src="assets/image2.jpeg" 
+    <a-image src="assets/image1.jpeg" 
       position="-3 0 -3" 
       scale="3 3 3" 
       rotation="0 0 0"
       look-at="[camera]"></a-image>
 
-    <a-image src="assets/virgen.jpg" 
+    <a-image src="assets/image1.jpeg" 
       position="4 0 -4" 
       scale="3 3 3" 
       rotation="0 0 0"
@@ -98,7 +98,20 @@
     // Attempt to trigger play on videos for mobile devices
     document.querySelectorAll('a-video').forEach(videoEl => {
       videoEl.addEventListener('loadeddata', () => {
-        videoEl.components.material.material.map.image.play();
+        const video = videoEl.components.material.material.map.image;
+        if (video && typeof video.play === "function") {
+          video.play().catch(error => {
+            console.log('Autoplay prevented:', error);
+          });
+        }
+      });
+
+      // Additional autoplay handling for Safari on iOS
+      videoEl.addEventListener('click', () => {
+        const video = videoEl.components.material.material.map.image;
+        if (video && typeof video.play === "function") {
+          video.play();
+        }
       });
     });
   </script>
