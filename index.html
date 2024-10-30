@@ -32,40 +32,39 @@
   </div>
 
   <!-- A-Frame AR Scene -->
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-  
-
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: true;">
+    
     <!-- Replace 3 images with videos -->
     <a-video src="assets/video1.mp4" 
-    position="7 0 -3" 
+      position="7 0 -3" 
       scale="3 3 3" 
       rotation="0 -10 0"
-      autoplay="false" 
-      muted="true" 
+      autoplay 
+      muted 
       playsinline 
-      loop="true" 
+      loop 
       look-at="[camera]">
     </a-video>
 
     <a-video src="assets/video2.mp4" 
-    position="3.54 0 3.54" 
+      position="3.54 0 3.54" 
       scale="3 3 3" 
       rotation="0 0 0"
-      autoplay="false" 
-      muted="true" 
+      autoplay 
+      muted 
       playsinline 
-      loop="true" 
+      loop 
       look-at="[camera]">
     </a-video>
 
     <a-video src="assets/video3.mp4" 
-    position="0 0 5" 
+      position="0 0 5" 
       scale="3 3 3" 
       rotation="0 0 0"
-      autoplay="false" 
-      muted="true" 
+      autoplay 
+      muted 
       playsinline 
-      loop="true" 
+      loop 
       look-at="[camera]">
     </a-video>
 
@@ -95,6 +94,13 @@
     setTimeout(() => {
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
+
+    // Attempt to trigger play on videos for mobile devices
+    document.querySelectorAll('a-video').forEach(videoEl => {
+      videoEl.addEventListener('loadeddata', () => {
+        videoEl.components.material.material.map.image.play();
+      });
+    });
   </script>
 
 </body>
