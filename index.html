@@ -47,7 +47,7 @@
   <button id="play-video3" class="play-button" style="bottom: 40px; left: 260px;">Play Video 3</button>
   <button id="play-video4" class="play-button" style="bottom: 40px; left: 380px;">Play Video 4</button>
 
-  <!-- A-Frame AR Scene -->
+  <!-- A-Frame AR Scene without loading bar or debug UI -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true">
 
     <!-- Preload assets to ensure they load correctly -->
@@ -56,31 +56,27 @@
       <video id="vid2" src="assets/video2.mp4" playsinline muted crossorigin="anonymous"></video>
       <video id="vid3" src="assets/video3.mp4" playsinline muted crossorigin="anonymous"></video>
       <video id="vid4" src="assets/video1.mp4" playsinline muted crossorigin="anonymous"></video>
-      <img id="placeholder1" src="assets/placeholder1.jpg" crossorigin="anonymous">
-      <img id="placeholder2" src="assets/placeholder2.jpg" crossorigin="anonymous">
-      <img id="placeholder3" src="assets/placeholder3.jpg" crossorigin="anonymous">
-      <img id="placeholder4" src="assets/placeholder4.jpg" crossorigin="anonymous">
     </a-assets>
 
     <!-- Front Position -->
-    <a-image id="image1-front" src="assets/image1.jpeg" position="-1.5 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
+    <a-image id="image1-front" src="assets/image1.jpeg" position="-2.5 1 -4" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
     <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.8 1.8 1.8" rotation="0 0 0" toggle-button="#play-video1" crossorigin="anonymous"></a-video>
-    <a-image id="image2-front" src="assets/image2.jpeg" position="1.5 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
+    <a-image id="image2-front" src="assets/image2.jpeg" position="2.5 1 -4" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
 
     <!-- Right Position -->
-    <a-image id="image1-right" src="assets/image1.jpeg" position="3 1 -1.5" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
+    <a-image id="image1-right" src="assets/image1.jpeg" position="4 1 -2.5" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
     <a-video id="video2" src="#vid2" position="3 1 0" scale="1.8 1.8 1.8" rotation="0 -90 0" toggle-button="#play-video2" crossorigin="anonymous"></a-video>
-    <a-image id="image2-right" src="assets/image2.jpeg" position="3 1 1.5" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
+    <a-image id="image2-right" src="assets/image2.jpeg" position="4 1 2.5" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
 
     <!-- Left Position -->
-    <a-image id="image1-left" src="assets/image1.jpeg" position="-3 1 -1.5" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
+    <a-image id="image1-left" src="assets/image1.jpeg" position="-4 1 -2.5" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
     <a-video id="video3" src="#vid3" position="-3 1 0" scale="1.8 1.8 1.8" rotation="0 90 0" toggle-button="#play-video3" crossorigin="anonymous"></a-video>
-    <a-image id="image2-left" src="assets/image2.jpeg" position="-3 1 1.5" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
+    <a-image id="image2-left" src="assets/image2.jpeg" position="-4 1 2.5" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
 
     <!-- Back Position -->
-    <a-image id="image1-back" src="assets/image1.jpeg" position="-1.5 1 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
+    <a-image id="image1-back" src="assets/image1.jpeg" position="-2.5 1 4" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
     <a-video id="video4" src="#vid4" position="0 1 3" scale="1.8 1.8 1.8" rotation="0 180 0" toggle-button="#play-video4" crossorigin="anonymous"></a-video>
-    <a-image id="image2-back" src="assets/image2.jpeg" position="1.5 1 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
+    <a-image id="image2-back" src="assets/image2.jpeg" position="2.5 1 4" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
 
   </a-scene>
 
@@ -90,7 +86,7 @@
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
-    // Function to show the video and hide the placeholder
+    // Function to show the video and start playback
     function showVideo(videoId) {
       const videoEl = document.getElementById(videoId);
       videoEl.components.material.material.map.image.play(); // Start the video
