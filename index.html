@@ -7,9 +7,7 @@
   <!-- Include A-Frame and AR.js -->
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/1.7.2/aframe/build/aframe-ar.min.js"></script>
-  <script src="https://unpkg.com/aframe-drag-component/dist/aframe-drag-component.min.js"></script>
-  <script src="https://unpkg.com/aframe-rotate-component/dist/aframe-rotate-component.min.js"></script>
-
+  
   <!-- Favicon-->
   <link rel="shortcut icon" href="assets/Logo.png">
   
@@ -24,11 +22,8 @@
       padding: 10px;
       z-index: 1;
     }
-    #play-button {
+    .play-button {
       position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
       padding: 10px 20px;
       background-color: #ff5733;
       color: white;
@@ -45,34 +40,36 @@
     Mueve tu telefono alrededor!
   </div>
 
-  <!-- Start Videos Button -->
-  <button id="play-button">Start Videos</button>
+  <!-- Separate buttons for each video -->
+  <button id="play-video1" class="play-button" style="bottom: 60px; left: 10px;">Play Video 1</button>
+  <button id="play-video2" class="play-button" style="bottom: 60px; left: 120px;">Play Video 2</button>
+  <button id="play-video3" class="play-button" style="bottom: 60px; left: 230px;">Play Video 3</button>
 
   <!-- A-Frame AR Scene -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: true;">
     
-    <!-- Videos positioned around the scene -->
-    <a-video src="assets/video1.mp4" 
-      position="7 0 -3" 
-      scale="3 3 3" 
+    <!-- Videos positioned around the scene without overlap -->
+    <a-video id="video1" src="assets/video1.mp4" 
+      position="4 1 -3" 
+      scale="2 2 2" 
       rotation="0 10 0"
       muted 
       playsinline 
       loop>
     </a-video>
 
-    <a-video src="assets/video2.mp4" 
-      position="3.54 0 3.54" 
-      scale="3 3 3" 
+    <a-video id="video2" src="assets/video2.mp4" 
+      position="3.5 1 3.5" 
+      scale="2 2 2" 
       rotation="0 -45 0"
       muted 
       playsinline 
       loop>
     </a-video>
 
-    <a-video src="assets/video3.mp4" 
-      position="0 0 5" 
-      scale="3 3 3" 
+    <a-video id="video3" src="assets/video3.mp4" 
+      position="0 1 5" 
+      scale="2 2 2" 
       rotation="0 0 0"
       muted 
       playsinline 
@@ -81,18 +78,18 @@
 
     <!-- Images positioned around the scene -->
     <a-image src="assets/image1.jpeg" 
-      position="-3.54 0 3.54" 
-      scale="3 3 3" 
+      position="-3.5 1 3.5" 
+      scale="2.5 2.5 2.5" 
       rotation="0 -135 0"></a-image>
 
     <a-image src="assets/image2.jpeg" 
-      position="-3 0 -3" 
-      scale="3 3 3" 
+      position="-4 1 -3" 
+      scale="2.5 2.5 2.5" 
       rotation="0 135 0"></a-image>
 
     <a-image src="assets/virgen.jpg" 
-      position="4 0 -4" 
-      scale="3 3 3" 
+      position="4 1 -5" 
+      scale="2.5 2.5 2.5" 
       rotation="0 -45 0"></a-image>
 
   </a-scene>
@@ -103,21 +100,55 @@
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
-    // Play videos on user interaction
-    document.getElementById('play-button').addEventListener('click', () => {
-      document.querySelectorAll('a-video').forEach(videoEl => {
-        const video = videoEl.components.material.material.map.image;
-        if (video && typeof video.play === "function") {
-          video.play().catch(error => {
-            console.log('Autoplay prevented:', error);
-          });
+    // Function to play and stop a video based on the button pressed
+    function toggleVideo(videoId) {
+      const videoEl = document.getElementById(videoId);
+      const video = videoEl.components.material.material.map.image;
+      if (video && typeof video.play === "function") {
+        if (video.paused) {
+          video.play().catch(error => console.log('Autoplay prevented:', error));
+        } else {
+          video.pause();
         }
-      });
-      
-      // Hide the play button after starting videos
-      document.getElementById('play-button').style.display = 'none';
+      }
+    }
+
+    // Event listeners for each play button
+    document.getElementById('play-video1').addEventListener('click', () => toggleVideo('video1'));
+    document.getElementById('play-video2').addEventListener('click', () => toggleVideo('video2'));
+    document.getElementById('play-video3').addEventListener('click', () => toggleVideo('video3'));
+
+    // Pause videos when they're not facing the camera
+    AFRAME.registerComponent('pause-when-not-in-view', {
+      tick: function () {
+        const el = this.el;
+        const camera = this.el.sceneEl.camera;
+        
+        const position = new THREE.Vector3();
+        const rotation = new THREE.Quaternion();
+        el.object3D.getWorldPosition(position);
+        el.object3D.getWorldQuaternion(rotation);
+        
+        const cameraDirection = camera.getWorldDirection(new THREE.Vector3());
+        const videoDirection = position.sub(camera.position).normalize();
+
+        // Calculate dot product to determine if the camera faces the video
+        if (cameraDirection.dot(videoDirection) < 0.5) { // Adjust threshold as needed
+          const video = el.components.material.material.map.image;
+          if (video && typeof video.pause === "function" && !video.paused) {
+            video.pause();
+          }
+        }
+      }
     });
+
+    // Attach pause-when-not-in-view component to each video
+    document.getElementById('video1').setAttribute('pause-when-not-in-view', '');
+    document.getElementById('video2').setAttribute('pause-when-not-in-view', '');
+    document.getElementById('video3').setAttribute('pause-when-not-in-view', '');
+
   </script>
 
 </body>
 </html>
+
