@@ -32,7 +32,7 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 2;
-      display: none; /* Hide buttons initially */
+      display: inline; /* Display buttons */
     }
   </style>
 </head>
@@ -59,24 +59,24 @@
     </a-assets>
 
     <!-- Front Position -->
-    <a-image id="image1-front" src="assets/image1.jpeg" position="-2.5 1.2 -3.5" scale="1.8 1.8 1.8" rotation="0 0 0"></a-image>
-    <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0" toggle-button="#play-video1" crossorigin="anonymous"></a-video>
-    <a-image id="image2-front" src="assets/image2.jpeg" position="2.5 1.2 -3.5" scale="1.8 1.8 1.8" rotation="0 0 0"></a-image>
+    <a-image id="image1-front" src="assets/image1.jpeg" position="-1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
+    <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0" crossorigin="anonymous"></a-video>
+    <a-image id="image2-front" src="assets/image2.jpeg" position="1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
 
     <!-- Right Position -->
-    <a-image id="image1-right" src="assets/image1.jpeg" position="3.5 1.2 -2.5" scale="1.8 1.8 1.8" rotation="0 -90 0"></a-image>
-    <a-video id="video2" src="#vid2" position="3 1 0" scale="1.5 1.5 1.5" rotation="0 -90 0" toggle-button="#play-video2" crossorigin="anonymous"></a-video>
-    <a-image id="image2-right" src="assets/image2.jpeg" position="3.5 1.2 2.5" scale="1.8 1.8 1.8" rotation="0 -90 0"></a-image>
+    <a-image id="image1-right" src="assets/image1.jpeg" position="3 1.2 -1.8" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
+    <a-video id="video2" src="#vid2" position="3 1 0" scale="1.5 1.5 1.5" rotation="0 -90 0" crossorigin="anonymous"></a-video>
+    <a-image id="image2-right" src="assets/image2.jpeg" position="3 1.2 1.8" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
 
     <!-- Left Position -->
-    <a-image id="image1-left" src="assets/image1.jpeg" position="-3.5 1.2 -2.5" scale="1.8 1.8 1.8" rotation="0 90 0"></a-image>
-    <a-video id="video3" src="#vid3" position="-3 1 0" scale="1.5 1.5 1.5" rotation="0 90 0" toggle-button="#play-video3" crossorigin="anonymous"></a-video>
-    <a-image id="image2-left" src="assets/image2.jpeg" position="-3.5 1.2 2.5" scale="1.8 1.8 1.8" rotation="0 90 0"></a-image>
+    <a-image id="image1-left" src="assets/image1.jpeg" position="-3 1.2 -1.8" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
+    <a-video id="video3" src="#vid3" position="-3 1 0" scale="1.5 1.5 1.5" rotation="0 90 0" crossorigin="anonymous"></a-video>
+    <a-image id="image2-left" src="assets/image2.jpeg" position="-3 1.2 1.8" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
 
     <!-- Back Position -->
-    <a-image id="image1-back" src="assets/image1.jpeg" position="-2.5 1.2 3.5" scale="1.8 1.8 1.8" rotation="0 180 0"></a-image>
-    <a-video id="video4" src="#vid4" position="0 1 3" scale="1.5 1.5 1.5" rotation="0 180 0" toggle-button="#play-video4" crossorigin="anonymous"></a-video>
-    <a-image id="image2-back" src="assets/image2.jpeg" position="2.5 1.2 3.5" scale="1.8 1.8 1.8" rotation="0 180 0"></a-image>
+    <a-image id="image1-back" src="assets/image1.jpeg" position="-1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
+    <a-video id="video4" src="#vid4" position="0 1 3" scale="1.5 1.5 1.5" rotation="0 180 0" crossorigin="anonymous"></a-video>
+    <a-image id="image2-back" src="assets/image2.jpeg" position="1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
 
   </a-scene>
 
@@ -86,18 +86,17 @@
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
-    // Function to show the video and start playback
-    function showVideo(videoId) {
-      const videoEl = document.getElementById(videoId);
-      videoEl.components.material.material.map.image.play(); // Start the video
+    // Function to play video on click
+    function playVideo(videoId) {
+      const videoEl = document.querySelector(videoId);
+      videoEl.play(); // Play the video
     }
 
     // Event listeners for each play button
-    document.getElementById('play-video1').addEventListener('click', () => showVideo('video1'));
-    document.getElementById('play-video2').addEventListener('click', () => showVideo('video2'));
-    document.getElementById('play-video3').addEventListener('click', () => showVideo('video3'));
-    document.getElementById('play-video4').addEventListener('click', () => showVideo('video4'));
-
+    document.getElementById('play-video1').addEventListener('click', () => playVideo('#vid1'));
+    document.getElementById('play-video2').addEventListener('click', () => playVideo('#vid2'));
+    document.getElementById('play-video3').addEventListener('click', () => playVideo('#vid3'));
+    document.getElementById('play-video4').addEventListener('click', () => playVideo('#vid4'));
   </script>
 </body>
 </html>
