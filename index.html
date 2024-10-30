@@ -32,7 +32,7 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 2;
-      display: inline; /* Display buttons */
+      display: none; /* Hide buttons initially */
     }
   </style>
 </head>
@@ -41,21 +41,21 @@
     Mueve tu teléfono alrededor!
   </div>
 
-  <!-- Buttons positioned for each video -->
-  <button id="play-video1" class="play-button" style="bottom: 40px; left: 20px;">Play Video 1</button>
-  <button id="play-video2" class="play-button" style="bottom: 40px; left: 140px;">Play Video 2</button>
-  <button id="play-video3" class="play-button" style="bottom: 40px; left: 260px;">Play Video 3</button>
-  <button id="play-video4" class="play-button" style="bottom: 40px; left: 380px;">Play Video 4</button>
+  <!-- Play Buttons -->
+  <button id="play-video1" class="play-button">Play Video 1</button>
+  <button id="play-video2" class="play-button">Play Video 2</button>
+  <button id="play-video3" class="play-button">Play Video 3</button>
+  <button id="play-video4" class="play-button">Play Video 4</button>
 
   <!-- A-Frame AR Scene without loading bar or debug UI -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true">
 
     <!-- Preload assets to ensure they load correctly -->
     <a-assets>
-      <video id="vid1" src="assets/video1.mp4" playsinline muted crossorigin="anonymous"></video>
-      <video id="vid2" src="assets/video2.mp4" playsinline muted crossorigin="anonymous"></video>
-      <video id="vid3" src="assets/video3.mp4" playsinline muted crossorigin="anonymous"></video>
-      <video id="vid4" src="assets/video1.mp4" playsinline muted crossorigin="anonymous"></video>
+      <video id="vid1" src="assets/video1.mp4" playsinline crossorigin="anonymous"></video>
+      <video id="vid2" src="assets/video2.mp4" playsinline crossorigin="anonymous"></video>
+      <video id="vid3" src="assets/video3.mp4" playsinline crossorigin="anonymous"></video>
+      <video id="vid4" src="assets/video1.mp4" playsinline crossorigin="anonymous"></video>
     </a-assets>
 
     <!-- Front Position -->
@@ -86,11 +86,27 @@
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
-    // Function to play video on click
+    // Play video function
     function playVideo(videoId) {
       const videoEl = document.querySelector(videoId);
-      videoEl.play(); // Play the video
+      videoEl.play();
+      videoEl.muted = false; // Enable sound
     }
+
+    // Show or hide buttons based on camera's rotation
+    function checkRotation() {
+      const camera = document.querySelector('a-camera');
+      const rotation = camera.getAttribute('rotation').y;
+
+      // Display the play button based on the direction the camera is facing
+      document.getElementById('play-video1').style.display = (rotation > -10 && rotation < 10) ? 'block' : 'none';
+      document.getElementById('play-video2').style.display = (rotation > 80 && rotation < 100) ? 'block' : 'none';
+      document.getElementById('play-video3').style.display = (rotation > 170 && rotation < 190) ? 'block' : 'none';
+      document.getElementById('play-video4').style.display = (rotation > 260 && rotation < 280) ? 'block' : 'none';
+    }
+
+    // Check camera rotation every 100ms
+    setInterval(checkRotation, 100);
 
     // Event listeners for each play button
     document.getElementById('play-video1').addEventListener('click', () => playVideo('#vid1'));
@@ -100,3 +116,4 @@
   </script>
 </body>
 </html>
+
