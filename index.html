@@ -93,11 +93,10 @@
       { videoId: '#vid4', button: document.getElementById('play-video4') },
     ];
 
-    document.querySelectorAll('.play-button').forEach((button) => {
-      button.addEventListener('click', (event) => {
-        const videoId = event.target.id.replace('play-', '#');
-        playVideo(videoId);
-      });
+    // Add both click and touchstart event listeners for mobile compatibility
+    buttons.forEach(({ videoId, button }) => {
+      button.addEventListener('click', () => playVideo(videoId));
+      button.addEventListener('touchstart', () => playVideo(videoId));
     });
 
     function updateButtonVisibility() {
@@ -105,18 +104,23 @@
       const intersections = camera.components.raycaster.intersections;
 
       buttons.forEach(({ videoId, button }) => {
-        if (intersections.some(intersection => intersection.object.id === videoId.replace('#', ''))) {
-          button.style.display = 'block';
-        } else {
-          button.style.display = 'none';
-        }
+        const videoElementId = videoId.replace('#', '');
+        const isVisible = intersections.some(intersection => intersection.object.id === videoElementId);
+        button.style.display = isVisible ? 'block' : 'none';
       });
     }
 
+    // Run button visibility check on each frame for iOS compatibility
+    AFRAME.registerComponent('button-visibility', {
+      tick: function () {
+        updateButtonVisibility();
+      }
+    });
+
     document.querySelector('a-scene').addEventListener('renderstart', () => {
       const camera = document.getElementById('camera');
-      camera.addEventListener('raycaster-intersection', updateButtonVisibility);
-      camera.addEventListener('raycaster-intersection-cleared', updateButtonVisibility);
+      camera.setAttribute('raycaster', 'objects: .play-button, a-video; far: 5');
+      camera.setAttribute('button-visibility', ''); // Enable visibility component
     });
   </script>
 </body>
