@@ -41,7 +41,7 @@
     Mueve tu teléfono alrededor!
   </div>
 
-  <!-- Adjusted button positions for each video -->
+  <!-- Buttons positioned for each video -->
   <button id="play-video1" class="play-button" style="bottom: 40px; left: 20px;">Play Video 1</button>
   <button id="play-video2" class="play-button" style="bottom: 40px; left: 140px;">Play Video 2</button>
   <button id="play-video3" class="play-button" style="bottom: 40px; left: 260px;">Play Video 3</button>
@@ -56,23 +56,31 @@
       <video id="vid2" src="assets/video2.mp4" playsinline muted crossorigin="anonymous"></video>
       <video id="vid3" src="assets/video3.mp4" playsinline muted crossorigin="anonymous"></video>
       <video id="vid4" src="assets/video1.mp4" playsinline muted crossorigin="anonymous"></video>
+      <img id="placeholder1" src="assets/placeholder1.jpg" crossorigin="anonymous">
+      <img id="placeholder2" src="assets/placeholder2.jpg" crossorigin="anonymous">
+      <img id="placeholder3" src="assets/placeholder3.jpg" crossorigin="anonymous">
+      <img id="placeholder4" src="assets/placeholder4.jpg" crossorigin="anonymous">
     </a-assets>
 
     <!-- Front Position -->
-    <a-video id="video1" src="#vid1" position="0.5 1 -3" scale="1.8 1.8 1.8" rotation="0 0 0" toggle-button="#play-video1" crossorigin="anonymous"></a-video>
-    <a-image id="image1" src="assets/image1.jpeg" position="-1.5 1 -3.2" scale="1.8 1.8 1.8" rotation="0 0 0" crossorigin="anonymous"></a-image>
+    <a-image id="image1-front" src="assets/image1.jpeg" position="-1.5 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
+    <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.8 1.8 1.8" rotation="0 0 0" toggle-button="#play-video1" crossorigin="anonymous"></a-video>
+    <a-image id="image2-front" src="assets/image2.jpeg" position="1.5 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
 
     <!-- Right Position -->
-    <a-video id="video2" src="#vid2" position="3 1 -0.5" scale="1.8 1.8 1.8" rotation="0 -90 0" toggle-button="#play-video2" crossorigin="anonymous"></a-video>
-    <a-image id="image2" src="assets/image2.jpeg" position="3 1 1.5" scale="1.5 1.5 1.5" rotation="0 -90 0" crossorigin="anonymous"></a-image>
+    <a-image id="image1-right" src="assets/image1.jpeg" position="3 1 -1.5" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
+    <a-video id="video2" src="#vid2" position="3 1 0" scale="1.8 1.8 1.8" rotation="0 -90 0" toggle-button="#play-video2" crossorigin="anonymous"></a-video>
+    <a-image id="image2-right" src="assets/image2.jpeg" position="3 1 1.5" scale="1.5 1.5 1.5" rotation="0 -90 0"></a-image>
 
     <!-- Left Position -->
-    <a-video id="video3" src="#vid3" position="-3 1 -0.5" scale="1.8 1.8 1.8" rotation="0 90 0" toggle-button="#play-video3" crossorigin="anonymous"></a-video>
-    <a-image id="image3" src="assets/image1.jpeg" position="-3 1 1.5" scale="1.5 1.5 1.5" rotation="0 90 0" crossorigin="anonymous"></a-image>
+    <a-image id="image1-left" src="assets/image1.jpeg" position="-3 1 -1.5" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
+    <a-video id="video3" src="#vid3" position="-3 1 0" scale="1.8 1.8 1.8" rotation="0 90 0" toggle-button="#play-video3" crossorigin="anonymous"></a-video>
+    <a-image id="image2-left" src="assets/image2.jpeg" position="-3 1 1.5" scale="1.5 1.5 1.5" rotation="0 90 0"></a-image>
 
     <!-- Back Position -->
-    <a-video id="video4" src="#vid4" position="0.5 1 3" scale="1.8 1.8 1.8" rotation="0 180 0" toggle-button="#play-video4" crossorigin="anonymous"></a-video>
-    <a-image id="image4" src="assets/image2.jpeg" position="-1.5 1 3.2" scale="1.5 1.5 1.5" rotation="0 180 0" crossorigin="anonymous"></a-image>
+    <a-image id="image1-back" src="assets/image1.jpeg" position="-1.5 1 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
+    <a-video id="video4" src="#vid4" position="0 1 3" scale="1.8 1.8 1.8" rotation="0 180 0" toggle-button="#play-video4" crossorigin="anonymous"></a-video>
+    <a-image id="image2-back" src="assets/image2.jpeg" position="1.5 1 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
 
   </a-scene>
 
@@ -82,60 +90,17 @@
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
-    // Helper function to show/hide buttons based on camera facing
-    function setButtonVisibility(buttonId, visible) {
-      document.getElementById(buttonId).style.display = visible ? 'block' : 'none';
-    }
-
-    // Component to toggle play button visibility when facing a video
-    AFRAME.registerComponent('toggle-button-on-view', {
-      init: function () {
-        this.buttonId = this.el.getAttribute('toggle-button');
-        this.camera = document.querySelector('[camera]');
-      },
-      tick: function () {
-        const videoPosition = new THREE.Vector3();
-        this.el.object3D.getWorldPosition(videoPosition);
-        
-        const cameraPosition = this.camera.object3D.position;
-        const cameraDirection = this.camera.object3D.getWorldDirection(new THREE.Vector3());
-        
-        const directionToVideo = videoPosition.clone().sub(cameraPosition).normalize();
-        const isFacingVideo = cameraDirection.dot(directionToVideo) > 0.9;
-
-        // Toggle button visibility based on facing direction
-        setButtonVisibility(this.buttonId.replace("#", ""), isFacingVideo);
-      }
-    });
-
-    // Attach toggle-button-on-view component to each video
-    document.getElementById('video1').setAttribute('toggle-button-on-view', '');
-    document.getElementById('video2').setAttribute('toggle-button-on-view', '');
-    document.getElementById('video3').setAttribute('toggle-button-on-view', '');
-    document.getElementById('video4').setAttribute('toggle-button-on-view', '');
-
-    // Function to play and stop a video based on the button pressed, with sound on
-    function toggleVideo(videoId) {
+    // Function to show the video and hide the placeholder
+    function showVideo(videoId) {
       const videoEl = document.getElementById(videoId);
-      const video = videoEl.components.material.material.map.image;
-
-      if (video && typeof video.play === "function") {
-        // Unmute video and play, or pause if already playing
-        video.muted = false;
-        if (video.paused) {
-          video.play().catch(error => console.log('Autoplay prevented:', error));
-        } else {
-          video.pause();
-          video.muted = true; // Mute again when paused
-        }
-      }
+      videoEl.components.material.material.map.image.play(); // Start the video
     }
 
     // Event listeners for each play button
-    document.getElementById('play-video1').addEventListener('click', () => toggleVideo('video1'));
-    document.getElementById('play-video2').addEventListener('click', () => toggleVideo('video2'));
-    document.getElementById('play-video3').addEventListener('click', () => toggleVideo('video3'));
-    document.getElementById('play-video4').addEventListener('click', () => toggleVideo('video4'));
+    document.getElementById('play-video1').addEventListener('click', () => showVideo('video1'));
+    document.getElementById('play-video2').addEventListener('click', () => showVideo('video2'));
+    document.getElementById('play-video3').addEventListener('click', () => showVideo('video3'));
+    document.getElementById('play-video4').addEventListener('click', () => showVideo('video4'));
 
   </script>
 </body>
