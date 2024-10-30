@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12Click</title>
+  <!-- Include A-Frame and AR.js -->
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/1.7.2/aframe/build/aframe-ar.min.js"></script>
+  <script src="https://unpkg.com/aframe-drag-component/dist/aframe-drag-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-rotate-component/dist/aframe-rotate-component.min.js"></script>
+
+  <!-- Favicon-->
+  <link rel="shortcut icon" href="assets/Logo.png">
+  
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #ar-info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="ar-info">
+    Mueve tu telefono alrededor!
+  </div>
+
+  <!-- A-Frame AR Scene -->
+  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+  
+
+    <!-- Replace 3 images with videos -->
+    <a-video src="assets/video1.mp4" 
+    position="7 0 -3" 
+    scale="3 3 3" 
+    rotation="0 -10 0"
+    autoplay="true" 
+    muted="true" 
+    loop="true" 
+    look-at="[camera]">
+    </a-video>
+
+    <a-video src="assets/video2.mp4" 
+    position="7 0 -3" 
+    scale="3 3 3" 
+    rotation="0 -10 0"
+    autoplay="true" 
+    muted="true" 
+    loop="true" 
+    look-at="[camera]">
+    </a-video>
+
+    <a-video src="assets/video3.mp4" 
+    position="7 0 -3" 
+    scale="3 3 3" 
+    rotation="0 -10 0"
+    autoplay="true" 
+    muted="true" 
+    loop="true" 
+    look-at="[camera]">
+    </a-video>
+
+    <!-- Remaining AR images positioned around a sphere with look-at -->
+    <a-image src="assets/image1.jpeg" 
+      position="-3.54 0 3.54" 
+      scale="3 3 3" 
+      rotation="0 0 0"
+      look-at="[camera]"></a-image>
+
+    <a-image src="assets/image2.jpeg" 
+      position="-3 0 -3" 
+      scale="3 3 3" 
+      rotation="0 0 0"
+      look-at="[camera]"></a-image>
+
+    <a-image src="assets/virgen.jpg" 
+      position="4 0 -4" 
+      scale="3 3 3" 
+      rotation="0 0 0"
+      look-at="[camera]"></a-image>
+
+  </a-scene>
+
+  <script>
+    // Remove AR info after 3 seconds
+    setTimeout(() => {
+      document.getElementById('ar-info').style.display = 'none';
+    }, 3000);
+  </script>
+
+</body>
+</html>
