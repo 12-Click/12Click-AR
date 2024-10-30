@@ -30,12 +30,13 @@
       border-radius: 5px;
       cursor: pointer;
       z-index: 2;
-      display: none;
     }
-    #play-video1 { bottom: 60px; left: 20%; }
-    #play-video2 { bottom: 60px; right: 20%; }
-    #play-video3 { top: 60px; left: 20%; }
-    #play-video4 { top: 60px; right: 20%; }
+
+    /* Place buttons based on the estimated screen position of each video */
+    #play-video1 { bottom: 15%; left: 45%; transform: translate(-50%, 50%); }
+    #play-video2 { bottom: 50%; right: 15%; transform: translate(50%, 50%); }
+    #play-video3 { bottom: 50%; left: 15%; transform: translate(-50%, 50%); }
+    #play-video4 { top: 15%; left: 45%; transform: translate(-50%, -50%); }
   </style>
 </head>
 <body>
@@ -43,6 +44,7 @@
     Mueve tu teléfono alrededor!
   </div>
 
+  <!-- Video Play Buttons -->
   <button id="play-video1" class="play-button">Play Video 1</button>
   <button id="play-video2" class="play-button">Play Video 2</button>
   <button id="play-video3" class="play-button">Play Video 3</button>
@@ -56,6 +58,7 @@
       <video id="vid4" src="assets/video1.mp4" playsinline crossorigin="anonymous" muted="true"></video>
     </a-assets>
 
+    <!-- Scene Elements -->
     <a-image id="image1-front" src="assets/image1.jpeg" position="-1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
     <a-video id="video1" src="#vid1" position="0 1 -3" scale="1.5 1.5 1.5" rotation="0 0 0" crossorigin="anonymous"></a-video>
     <a-image id="image2-front" src="assets/image2.jpeg" position="1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
@@ -72,7 +75,7 @@
     <a-video id="video4" src="#vid4" position="0 1 3" scale="1.5 1.5 1.5" rotation="0 180 0" crossorigin="anonymous"></a-video>
     <a-image id="image2-back" src="assets/image2.jpeg" position="1.8 1.2 3" scale="1.5 1.5 1.5" rotation="0 180 0"></a-image>
 
-    <a-camera id="camera" position="0 1.6 0" look-controls="enabled: true" raycaster="objects: a-video; far: 5"></a-camera>
+    <a-camera id="camera" position="0 1.6 0" look-controls="enabled: true"></a-camera>
   </a-scene>
 
   <script>
@@ -80,37 +83,18 @@
       document.getElementById('ar-info').style.display = 'none';
     }, 3000);
 
+    // Helper function to play and unmute video
     function playVideo(videoId) {
       const videoEl = document.querySelector(videoId);
-      videoEl.muted = false;
+      videoEl.muted = false; // Unmute for playback
       videoEl.play();
     }
 
-    const buttons = [
-      { videoId: '#vid1', button: document.getElementById('play-video1') },
-      { videoId: '#vid2', button: document.getElementById('play-video2') },
-      { videoId: '#vid3', button: document.getElementById('play-video3') },
-      { videoId: '#vid4', button: document.getElementById('play-video4') },
-    ];
-
-    buttons.forEach(({ videoId, button }) => {
-      button.addEventListener('click', () => playVideo(videoId));
-      button.addEventListener('touchstart', () => playVideo(videoId));
-    });
-
-    buttons.forEach(({ videoId, button }) => {
-      const videoEl = document.querySelector(videoId.replace('#', '#video'));
-
-      videoEl.addEventListener('loaded', () => {
-        videoEl.addEventListener('mouseenter', () => {
-          button.style.display = 'block';
-        });
-
-        videoEl.addEventListener('mouseleave', () => {
-          button.style.display = 'none';
-        });
-      });
-    });
+    // Associate each button with a video
+    document.getElementById('play-video1').addEventListener('click', () => playVideo('#vid1'));
+    document.getElementById('play-video2').addEventListener('click', () => playVideo('#vid2'));
+    document.getElementById('play-video3').addEventListener('click', () => playVideo('#vid3'));
+    document.getElementById('play-video4').addEventListener('click', () => playVideo('#vid4'));
   </script>
 </body>
 </html>
