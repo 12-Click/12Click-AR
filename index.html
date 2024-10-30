@@ -57,14 +57,14 @@
     </a-assets>
 
     <!-- Videos positioned facing the user without mirroring -->
-    <a-video id="video1" src=""assets/video1.mp4" position="2 1 -3" scale="2 2 2" rotation="0 0 0" toggle-button="#play-video1" crossorigin="anonymous"></a-video>
-    <a-video id="video2" src=""assets/video2.mp4" position="-2 1 -3" scale="2 2 2" rotation="0 0 0" toggle-button="#play-video2" crossorigin="anonymous"></a-video>
-    <a-video id="video3" src=""assets/video3.mp4" position="2 1 3" scale="2 2 2" rotation="0 180 0" toggle-button="#play-video3" crossorigin="anonymous"></a-video>
+    <a-video id="video1" src="#vid1" position="2 1 -3" scale="2 2 2" rotation="0 0 0" toggle-button="#play-video1" crossorigin="anonymous"></a-video>
+    <a-video id="video2" src="#vid2" position="-2 1 -3" scale="2 2 2" rotation="0 0 0" toggle-button="#play-video2" crossorigin="anonymous"></a-video>
+    <a-video id="video3" src="#vid3" position="2 1 3" scale="2 2 2" rotation="0 180 0" toggle-button="#play-video3" crossorigin="anonymous"></a-video>
 
     <!-- Images positioned closer together and facing forward -->
-    <a-image id="image1" src="assets/image1.jpeg" position="-2 1 3" scale="2 2 2" rotation="0 0 0"></a-image>
-    <a-image id="image2" src="assets/image1.jpeg" position="3 1 0" scale="2 2 2" rotation="0 0 0"></a-image>
-    <a-image id="image3" src="assets/image1.jpeg" position="-3 1 0" scale="2 2 2" rotation="0 0 0"></a-image>
+    <a-image id="image1" src="assets/image1.jpeg" position="-2 1 3" scale="2 2 2" rotation="0 0 0" crossorigin="anonymous"></a-image>
+    <a-image id="image2" src="assets/image2.jpeg" position="3 1 0" scale="2 2 2" rotation="0 0 0" crossorigin="anonymous"></a-image>
+    <a-image id="image3" src="assets/virgen.jpg" position="-3 1 0" scale="2 2 2" rotation="0 0 0" crossorigin="anonymous"></a-image>
 
   </a-scene>
 
@@ -110,6 +110,7 @@
       const videoEl = document.getElementById(videoId);
       const video = videoEl.components.material.material.map.image;
 
+      // Check if the video is paused, then play or pause
       if (video && typeof video.play === "function") {
         if (video.paused) {
           video.play().catch(error => console.log('Autoplay prevented:', error));
