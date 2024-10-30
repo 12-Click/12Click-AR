@@ -50,10 +50,10 @@
 
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true">
     <a-assets>
-      <video id="vid1" src="assets/video1.mp4" playsinline crossorigin="anonymous"></video>
-      <video id="vid2" src="assets/video2.mp4" playsinline crossorigin="anonymous"></video>
-      <video id="vid3" src="assets/video3.mp4" playsinline crossorigin="anonymous"></video>
-      <video id="vid4" src="assets/video1.mp4" playsinline crossorigin="anonymous"></video>
+      <video id="vid1" src="assets/video1.mp4" playsinline crossorigin="anonymous" muted="true"></video>
+      <video id="vid2" src="assets/video2.mp4" playsinline crossorigin="anonymous" muted="true"></video>
+      <video id="vid3" src="assets/video3.mp4" playsinline crossorigin="anonymous" muted="true"></video>
+      <video id="vid4" src="assets/video1.mp4" playsinline crossorigin="anonymous" muted="true"></video>
     </a-assets>
 
     <a-image id="image1-front" src="assets/image1.jpeg" position="-1.8 1.2 -3" scale="1.5 1.5 1.5" rotation="0 0 0"></a-image>
@@ -82,8 +82,8 @@
 
     function playVideo(videoId) {
       const videoEl = document.querySelector(videoId);
-      videoEl.play();
       videoEl.muted = false;
+      videoEl.play();
     }
 
     const buttons = [
@@ -93,7 +93,6 @@
       { videoId: '#vid4', button: document.getElementById('play-video4') },
     ];
 
-    // Add both click and touchstart event listeners for mobile compatibility
     buttons.forEach(({ videoId, button }) => {
       button.addEventListener('click', () => playVideo(videoId));
       button.addEventListener('touchstart', () => playVideo(videoId));
@@ -101,26 +100,27 @@
 
     function updateButtonVisibility() {
       const camera = document.getElementById('camera');
-      const intersections = camera.components.raycaster.intersections;
+      const raycaster = camera.components.raycaster;
 
+      if (!raycaster) return;
+
+      const intersections = raycaster.intersections;
       buttons.forEach(({ videoId, button }) => {
-        const videoElementId = videoId.replace('#', '');
-        const isVisible = intersections.some(intersection => intersection.object.id === videoElementId);
-        button.style.display = isVisible ? 'block' : 'none';
+        const videoEl = document.querySelector(videoId);
+        button.style.display = intersections.some(intersection => intersection.object === videoEl) ? 'block' : 'none';
       });
     }
 
-    // Run button visibility check on each frame for iOS compatibility
     AFRAME.registerComponent('button-visibility', {
       tick: function () {
         updateButtonVisibility();
       }
     });
 
-    document.querySelector('a-scene').addEventListener('renderstart', () => {
+    document.querySelector('a-scene').addEventListener('loaded', () => {
       const camera = document.getElementById('camera');
-      camera.setAttribute('raycaster', 'objects: .play-button, a-video; far: 5');
-      camera.setAttribute('button-visibility', ''); // Enable visibility component
+      camera.setAttribute('raycaster', 'objects: a-video; far: 5');
+      camera.setAttribute('button-visibility', '');
     });
   </script>
 </body>
