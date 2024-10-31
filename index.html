@@ -33,11 +33,12 @@
       display: none; /* Initially hidden */
     }
 
-    /* Place buttons right under each video */
-    #play-video1 { bottom: 22%; left: 50%; transform: translate(-50%, 50%); }
-    #play-video2 { bottom: 50%; right: 7%; transform: translate(50%, 50%); }
-    #play-video3 { bottom: 50%; left: 7%; transform: translate(-50%, 50%); }
-    #play-video4 { top: 8%; left: 50%; transform: translate(-50%, -50%); }
+    /* Uniform button positioning below each video */
+    #play-video1, #play-video2, #play-video3, #play-video4 {
+      bottom: 20%; /* Consistent bottom offset */
+      left: 50%;
+      transform: translateX(-50%);
+    }
   </style>
 </head>
 <body>
